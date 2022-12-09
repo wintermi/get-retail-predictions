@@ -69,7 +69,6 @@ func (prediction *Prediction) ExecuteRequest() error {
 		return fmt.Errorf("Prediction Request Failed: %w", err)
 	}
 
-	logger.Info().Msg("Prediction Results")
 	for i, r := range response.Results {
 		logger.Info().Int("Number", i).Msg("Prediction Result")
 		logger.Info().Str("Product Id", r.Id).Msg(indent)
