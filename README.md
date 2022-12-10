@@ -3,32 +3,43 @@
 
 
 ## Description
-A command line application designed to provide a simple method to request predictions from a given Retail API model.
+A command line application designed to provide a simple method of requesting predictions from a Google Cloud Retail API model for all sets of parameters contained within an input file.
 
 ```
 USAGE:
-    get-retail-predictions -p PROJECT_NUMBER -s SERVING_CONFIG
+    get-retail-predictions -p PROJECT_NUMBER -s SERVING_CONFIG -i INPUT_FILE
 
 ARGS:
   -c string
-    	Catalog  (Required) (default "default_catalog")
-  -experiment string
-    	Experiment Group
-  -filter string
+    	Catalog (default "default_catalog")
+  -f string
     	Filter String
+  -i string
+    	Parameter Input File  (Required)
   -l string
-    	Location  (Required) (default "global")
+    	Location (default "global")
   -n int
-    	Number of Predictions  (Required) (default 10)
+    	Number of Results, 1 to 100 (default 10)
   -p string
-    	Google Cloud Project Number  (Required)
-  -product string
-    	Product ID  (Required)
+    	Project Number  (Required)
   -s string
     	Serving Config  (Required)
-  -type string
-    	Event Type  (Required)
   -v	Output Verbose Detail
-  -visitor string
-    	Visitor ID  (Required)
+```
+
+## Example Parameter Input File
+
+```
+[
+  {
+    "event_type": "detail-page-view",
+    "visitor_id": "1",
+    "product_details": [{ "product": { "id": "100" } }]
+  },
+  {
+    "event_type": "detail-page-view",
+    "visitor_id": "1",
+    "product_details": [{ "product": { "id": "200" } }]
+  }
+]
 ```

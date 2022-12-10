@@ -1,0 +1,62 @@
+[
+    {
+      "event_type": "detail-page-view",
+      "visitor_id": "1",
+      "session_id": "",
+      "event_time": "2022-12-11 03:11:00",
+      "experiment_ids": [""],
+      "attribution_token": "",
+      "product_details": [
+        {
+          "product": {
+            "name": "",
+            "id": "100",
+            "type": "",
+            "primary_product_id": "",
+            "collection_member_ids": [""],
+            "gtin": "",
+            "categories": [""],
+            "title": "",
+            "brands": [""],
+            "description": "",
+            "language_code": "",
+            "attributes": {},
+            "tags": [""],
+            "price_info": {},
+            "rating": {},
+            "available_time": "",
+            "availability": {},
+            "available_quantity": 1,
+            "fulfillment_info": [{}],
+            "uri": "",
+            "images": [{}],
+            "audience": {},
+            "color_info": {},
+            "sizes": [""],
+            "materials": [""],
+            "patterns": [""],
+            "conditions": [""],
+            "promotions": [{}],
+            "publish_time": "",
+            "retrievable_fields": {},
+            "variants": [{}],
+            "local_inventories": [{}]
+          },
+          "quantity": 1
+        }
+      ],
+      "completion_detail": {},
+      "attributes": {},
+      "cart_id": "",
+      "purchase_transaction": {},
+      "search_query": "",
+      "filter": "",
+      "order_by": "",
+      "offset": 0,
+      "page_categories": [""],
+      "user_info": {},
+      "uri": "",
+      "referrer_uri": "",
+      "page_view_id": ""
+    }
+  ]

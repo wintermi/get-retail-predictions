@@ -1,0 +1,12 @@
+[
+  {
+    "event_type": "detail-page-view",
+    "visitor_id": "1",
+    "product_details": [{ "product": { "id": "100" } }]
+  },
+  {
+    "event_type": "detail-page-view",
+    "visitor_id": "1",
+    "product_details": [{ "product": { "id": "200" } }]
+  }
+]

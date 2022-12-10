@@ -25,19 +25,20 @@ import (
 )
 
 var logger zerolog.Logger
-var applicationText = "%s 0.1.0%s"
+var applicationText = "%s 0.2.0%s"
 var copyrightText = "Copyright 2022, Matthew Winter\n"
 var indent = "..."
 
 var helpText = `
-A command line application designed to provide a simple method to request
-predictions from a given Retail API model.
+A command line application designed to provide a simple method of requesting
+predictions from a Google Cloud Retail API model for all sets of parameters
+contained within an input file.
 
 Use --help for more details.
 
 
 USAGE:
-    get-retail-predictions -p PROJECT_NUMBER -s SERVING_CONFIG
+    get-retail-predictions -p PROJECT_NUMBER -s SERVING_CONFIG -i INPUT_FILE
 
 ARGS:
 `
@@ -51,23 +52,26 @@ func main() {
 	}
 
 	// Define the Long CLI flag names
-	var targetProject = flag.String("p", "", "Google Cloud Project Number  (Required)")
-	var targetLocation = flag.String("l", "global", "Location  (Required)")
-	var targetCatalog = flag.String("c", "default_catalog", "Catalog  (Required)")
-	var targetServingConfig = flag.String("s", "", "Serving Config  (Required)")
-	var requestNumberPredictions = flag.Int("n", 10, "Number of Predictions  (Required)")
-	var requestEventType = flag.String("type", "", "Event Type  (Required)")
-	var requestVisitorID = flag.String("visitor", "", "Visitor ID  (Required)")
-	var requestProductID = flag.String("product", "", "Product ID  (Required)")
-	var requestFilter = flag.String("filter", "", "Filter String")
-	var requestExperiementID = flag.String("experiment", "", "Experiment Group")
+	var projectNumber = flag.String("p", "", "Project Number  (Required)")
+	var location = flag.String("l", "global", "Location")
+	var catalog = flag.String("c", "default_catalog", "Catalog")
+	var servingConfig = flag.String("s", "", "Serving Config  (Required)")
+	var parameterInputFile = flag.String("i", "", "Parameter Input File  (Required)")
+	var numberResults = flag.Int("n", 10, "Number of Results, 1 to 100")
+	var filterString = flag.String("f", "", "Filter String")
 	var verbose = flag.Bool("v", false, "Output Verbose Detail")
 
 	// Parse the flags
 	flag.Parse()
 
 	// Validate the Required Flags
-	if *targetProject == "" || *targetLocation == "" || *targetCatalog == "" || *targetServingConfig == "" || *requestEventType == "" || *requestVisitorID == "" || *requestProductID == "" {
+	if *projectNumber == "" || *location == "" || *catalog == "" || *servingConfig == "" || *parameterInputFile == "" {
+		flag.Usage()
+		os.Exit(1)
+	}
+
+	// Verify Number of Results is between 1 and 100
+	if *numberResults < 1 || *numberResults > 100 {
 		flag.Usage()
 		os.Exit(1)
 	}
@@ -87,34 +91,28 @@ func main() {
 	// Output Header
 	logger.Info().Msgf(applicationText, filepath.Base(os.Args[0]), "")
 	logger.Info().Msg("Arguments")
-	logger.Info().Str("Project Number", *targetProject).Msg(indent)
-	logger.Info().Str("Location", *targetLocation).Msg(indent)
-	logger.Info().Str("Catalog", *targetCatalog).Msg(indent)
-	logger.Info().Str("Serving Config", *targetServingConfig).Msg(indent)
-	logger.Info().Int("Number of Predictions", *requestNumberPredictions).Msg(indent)
-	logger.Info().Str("Event Type", *requestEventType).Msg(indent)
-	logger.Info().Str("Visitor ID", *requestVisitorID).Msg(indent)
-	logger.Info().Str("Product ID", *requestProductID).Msg(indent)
-	logger.Info().Str("Filter String", *requestFilter).Msg(indent)
-	logger.Info().Str("Experiment Group", *requestExperiementID).Msg(indent)
+	logger.Info().Str("Project Number", *projectNumber).Msg(indent)
+	logger.Info().Str("Location", *location).Msg(indent)
+	logger.Info().Str("Catalog", *catalog).Msg(indent)
+	logger.Info().Str("Serving Config", *servingConfig).Msg(indent)
+	logger.Info().Str("Parameter Input File", *parameterInputFile).Msg(indent)
+	logger.Info().Int("Number of Predictions", *numberResults).Msg(indent)
+	logger.Info().Str("Filter String", *filterString).Msg(indent)
 	logger.Info().Msg("Begin")
 
 	// Setup the Prediction Request
-	var prediction = Prediction{
-		project:       *targetProject,
-		location:      *targetLocation,
-		catalog:       *targetCatalog,
-		servingConfig: *targetServingConfig,
-		numberResults: *requestNumberPredictions,
-		eventType:     *requestEventType,
-		visitor:       *requestVisitorID,
-		product:       *requestProductID,
-		filter:        *requestFilter,
-		experiment:    *requestExperiementID,
+	var prediction = NewPrediction(*projectNumber, *location, *catalog, *servingConfig, *numberResults, *filterString)
+
+	//  Load the Parameter Input File
+	logger.Info().Msg("Loading Parameter Input File")
+	err := prediction.LoadParameters(*parameterInputFile)
+	if err != nil {
+		logger.Error().Err(err).Msg("Load Parameter Input File Failed")
+		os.Exit(1)
 	}
 
 	// Request to get a Retail API Prediction
-	err := prediction.ExecuteRequest()
+	err = prediction.ExecuteRequests()
 	if err != nil {
 		logger.Error().Err(err).Msg("Prediction Request Failed")
 		os.Exit(1)
