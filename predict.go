@@ -57,24 +57,24 @@ func (prediction *Prediction) ExecuteRequests() error {
 	}
 	defer client.Close()
 
-	for requestIndex, userEvent := range prediction.userEvents {
+	for i := 0; i < len(prediction.userEvents); i++ {
 
 		// Populate Request Parameters
 		request := retailpb.PredictRequest{
 			Placement:    prediction.placement,
-			UserEvent:    &userEvent,
+			UserEvent:    &prediction.userEvents[i],
 			PageSize:     int32(prediction.numberResults),
 			Filter:       prediction.filter,
 			ValidateOnly: false,
 		}
 
 		// Encode the User Event to send to the log
-		rawUserEvent, err := json.Marshal(&userEvent)
+		rawUserEvent, err := json.Marshal(&prediction.userEvents[i])
 		if err != nil {
 			return fmt.Errorf("Encoding the User Event as JSON Failed: %w", err)
 		}
 
-		logger.Info().Int("Number", requestIndex+1).Msg("Initiating Prediction Request")
+		logger.Info().Int("Number", i+1).Msg("Initiating Prediction Request")
 		logger.Info().RawJSON("Parameters", rawUserEvent).Msg(indent)
 
 		// Raise the Prediction Request
@@ -89,6 +89,7 @@ func (prediction *Prediction) ExecuteRequests() error {
 			return fmt.Errorf("Encoding the Response Results as JSON Failed: %w", err)
 		}
 		logger.Info().RawJSON("Results", rawResults).Msg(indent)
+
 	}
 
 	return nil
@@ -111,17 +112,4 @@ func (prediction *Prediction) LoadParameters(inputFile string) error {
 	}
 
 	return nil
-}
-
-//---------------------------------------------------------------------------------------
-
-// Return ExperimentsId String Array if populated
-func (prediction *Prediction) GetProductDetails() []*retailpb.ProductDetail {
-	pd := &retailpb.ProductDetail{
-		Product: &retailpb.Product{
-			Id: "100",
-		},
-	}
-
-	return []*retailpb.ProductDetail{pd}
 }
