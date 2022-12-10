@@ -57,7 +57,7 @@ func main() {
 	var catalog = flag.String("c", "default_catalog", "Catalog")
 	var servingConfig = flag.String("s", "", "Serving Config  (Required)")
 	var parameterInputFile = flag.String("i", "", "Parameter Input File  (Required)")
-	var numberResults = flag.Int("n", 10, "Number of Results, 1 to 100")
+	var numberResults = flag.Int("n", 5, "Number of Results, 1 to 100")
 	var filterString = flag.String("f", "", "Filter String")
 	var verbose = flag.Bool("v", false, "Output Verbose Detail")
 
