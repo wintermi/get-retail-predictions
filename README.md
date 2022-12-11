@@ -26,7 +26,8 @@ ARGS:
     	Project Number  (Required)
   -s string
     	Serving Config  (Required)
-  -v	Output Verbose Detail```
+  -v	Output Verbose Detail
+```
 
 ## Example Parameter Input File
 
