@@ -26,20 +26,33 @@ import (
 )
 
 type Prediction struct {
-	placement     string
-	numberResults int
-	filter        string
-	userEvents    []retailpb.UserEvent
+	Project       string
+	Location      string
+	Catalog       string
+	Branch        string
+	ServingConfig string
+	PageSize      int32
+	Filter        string
+	UserEvents    []*retailpb.UserEvent
+}
+
+type Results struct {
+	Id    string `json:"id,omitempty"`
+	Title string `json:"title,omitempty"`
 }
 
 //---------------------------------------------------------------------------------------
 
 // Create a new Prediction struct populated
-func NewPrediction(project string, location string, catalog string, servingConfig string, numberResults int, filter string) Prediction {
+func NewPrediction(project string, location string, catalog string, branch string, servingConfig string, numberResults int, filter string) Prediction {
 	return Prediction{
-		placement:     fmt.Sprintf("projects/%s/locations/%s/catalogs/%s/servingConfigs/%s", project, location, catalog, servingConfig),
-		numberResults: numberResults,
-		filter:        filter,
+		Project:       project,
+		Location:      location,
+		Catalog:       catalog,
+		Branch:        branch,
+		ServingConfig: servingConfig,
+		PageSize:      int32(numberResults),
+		Filter:        filter,
 	}
 }
 
@@ -48,7 +61,7 @@ func NewPrediction(project string, location string, catalog string, servingConfi
 // Execute the Requests to get a Retail API Prediction for each of the UserEvent objects
 func (prediction *Prediction) ExecuteRequests() error {
 
-	// Establish a Retail API Client
+	// Establish a Retail API Prediction Client
 	logger.Info().Msg("Establishing a Retail Prediction Client")
 	ctx := context.Background()
 	client, err := retail.NewPredictionClient(ctx)
@@ -57,19 +70,23 @@ func (prediction *Prediction) ExecuteRequests() error {
 	}
 	defer client.Close()
 
-	for i := 0; i < len(prediction.userEvents); i++ {
+	placement := fmt.Sprintf("projects/%s/locations/%s/catalogs/%s/servingConfigs/%s",
+		prediction.Project, prediction.Location, prediction.Catalog, prediction.ServingConfig)
+
+	// Iterate through the User Events
+	for i := 0; i < len(prediction.UserEvents); i++ {
 
 		// Populate Request Parameters
 		request := retailpb.PredictRequest{
-			Placement:    prediction.placement,
-			UserEvent:    &prediction.userEvents[i],
-			PageSize:     int32(prediction.numberResults),
-			Filter:       prediction.filter,
+			Placement:    placement,
+			UserEvent:    prediction.UserEvents[i],
+			PageSize:     prediction.PageSize,
+			Filter:       prediction.Filter,
 			ValidateOnly: false,
 		}
 
-		// Encode the User Event to send to the log
-		rawUserEvent, err := json.Marshal(&prediction.userEvents[i])
+		// Encode the User Event before sending to the log
+		rawUserEvent, err := json.Marshal(&prediction.UserEvents[i])
 		if err != nil {
 			return fmt.Errorf("Encoding the User Event as JSON Failed: %w", err)
 		}
@@ -83,12 +100,28 @@ func (prediction *Prediction) ExecuteRequests() error {
 			return fmt.Errorf("Prediction Request Failed: %w", err)
 		}
 
-		// Encode the Results to send to the log
-		rawResults, err := json.Marshal(&response.Results)
-		if err != nil {
-			return fmt.Errorf("Encoding the Response Results as JSON Failed: %w", err)
+		// Iterate through the results and get the Product Title
+		for r := 0; r < len(response.Results); r++ {
+
+			// Get the Product Title for the Product Id from the response
+			title, err := prediction.GetProductTitle(response.Results[r].Id)
+			if err != nil {
+				return fmt.Errorf("Failed to Get Product Title: %w", err)
+			}
+
+			results := Results{
+				Id:    response.Results[r].Id,
+				Title: *title,
+			}
+
+			// Encode the Response Result before sending to the log
+			rawResults, err := json.Marshal(&results)
+			if err != nil {
+				return fmt.Errorf("Encoding the Response Results as JSON Failed: %w", err)
+			}
+			logger.Info().RawJSON("Results", rawResults).Msg(indent)
+
 		}
-		logger.Info().RawJSON("Results", rawResults).Msg(indent)
 
 	}
 
@@ -106,10 +139,39 @@ func (prediction *Prediction) LoadParameters(inputFile string) error {
 		return fmt.Errorf("Reading the Parameter Input File Failed: %w", err)
 	}
 
-	err = json.Unmarshal(buf, &prediction.userEvents)
+	err = json.Unmarshal(buf, &prediction.UserEvents)
 	if err != nil {
 		return fmt.Errorf("Parsing the Parameter Input File Failed: %w", err)
 	}
 
 	return nil
+}
+
+//---------------------------------------------------------------------------------------
+
+// Execute a Requests to get a Product Title from the Retail API
+func (prediction *Prediction) GetProductTitle(id string) (*string, error) {
+
+	// Establish a Retail API Product Client
+	ctx := context.Background()
+	client, err := retail.NewProductClient(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("Failed Establishing a Retail Product Client: %w", err)
+	}
+	defer client.Close()
+
+	// Populate Request Parameters
+	request := retailpb.GetProductRequest{
+		Name: fmt.Sprintf("projects/%s/locations/%s/catalogs/%s/branches/%s/products/%s",
+			prediction.Project, prediction.Location, prediction.Catalog, prediction.Branch, id),
+	}
+
+	// Raise the Prediction Request
+	response, err := client.GetProduct(ctx, &request)
+	if err != nil {
+		return nil, fmt.Errorf("Prediction Request Failed: %w", err)
+	}
+	title := response.Title
+
+	return &title, nil
 }

@@ -55,6 +55,7 @@ func main() {
 	var projectNumber = flag.String("p", "", "Project Number  (Required)")
 	var location = flag.String("l", "global", "Location")
 	var catalog = flag.String("c", "default_catalog", "Catalog")
+	var branch = flag.String("b", "0", "Branch")
 	var servingConfig = flag.String("s", "", "Serving Config  (Required)")
 	var parameterInputFile = flag.String("i", "", "Parameter Input File  (Required)")
 	var numberResults = flag.Int("n", 5, "Number of Results, 1 to 100")
@@ -65,7 +66,7 @@ func main() {
 	flag.Parse()
 
 	// Validate the Required Flags
-	if *projectNumber == "" || *location == "" || *catalog == "" || *servingConfig == "" || *parameterInputFile == "" {
+	if *projectNumber == "" || *location == "" || *catalog == "" || *branch == "" || *servingConfig == "" || *parameterInputFile == "" {
 		flag.Usage()
 		os.Exit(1)
 	}
@@ -94,14 +95,15 @@ func main() {
 	logger.Info().Str("Project Number", *projectNumber).Msg(indent)
 	logger.Info().Str("Location", *location).Msg(indent)
 	logger.Info().Str("Catalog", *catalog).Msg(indent)
+	logger.Info().Str("Branch", *branch).Msg(indent)
 	logger.Info().Str("Serving Config", *servingConfig).Msg(indent)
 	logger.Info().Str("Parameter Input File", *parameterInputFile).Msg(indent)
-	logger.Info().Int("Number of Predictions", *numberResults).Msg(indent)
+	logger.Info().Int("Number of Results", *numberResults).Msg(indent)
 	logger.Info().Str("Filter String", *filterString).Msg(indent)
 	logger.Info().Msg("Begin")
 
 	// Setup the Prediction Request
-	var prediction = NewPrediction(*projectNumber, *location, *catalog, *servingConfig, *numberResults, *filterString)
+	var prediction = NewPrediction(*projectNumber, *location, *catalog, *branch, *servingConfig, *numberResults, *filterString)
 
 	//  Load the Parameter Input File
 	logger.Info().Msg("Loading Parameter Input File")

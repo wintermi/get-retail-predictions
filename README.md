@@ -10,6 +10,8 @@ USAGE:
     get-retail-predictions -p PROJECT_NUMBER -s SERVING_CONFIG -i INPUT_FILE
 
 ARGS:
+  -b string
+    	Branch (default "0")
   -c string
     	Catalog (default "default_catalog")
   -f string
@@ -19,13 +21,12 @@ ARGS:
   -l string
     	Location (default "global")
   -n int
-    	Number of Results, 1 to 100 (default 10)
+    	Number of Results, 1 to 100 (default 5)
   -p string
     	Project Number  (Required)
   -s string
     	Serving Config  (Required)
-  -v	Output Verbose Detail
-```
+  -v	Output Verbose Detail```
 
 ## Example Parameter Input File
 
