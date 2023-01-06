@@ -1,5 +1,8 @@
 # Get Retail API Predictions
-[![Go Workflow Status](https://github.com/wintermi/get-retail-predictions/workflows/Go/badge.svg)](https://github.com/wintermi/get-retail-predictions/actions/workflows/go.yml)&nbsp;[![Go Report Card](https://goreportcard.com/badge/github.com/wintermi/get-retail-predictions)](https://goreportcard.com/report/github.com/wintermi/get-retail-predictions)&nbsp;[![license](https://img.shields.io/github/license/wintermi/get-retail-predictions.svg)](https://github.com/wintermi/get-retail-predictions/blob/main/LICENSE)&nbsp;[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/wintermi/get-retail-predictions?include_prereleases)](https://github.com/wintermi/get-retail-predictions/releases)
+[![Go Workflow Status](https://github.com/wintermi/get-retail-predictions/workflows/Go/badge.svg)](https://github.com/wintermi/get-retail-predictions/actions/workflows/go.yml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/wintermi/get-retail-predictions)](https://goreportcard.com/report/github.com/wintermi/get-retail-predictions)
+[![license](https://img.shields.io/github/license/wintermi/get-retail-predictions.svg)](https://github.com/wintermi/get-retail-predictions/blob/main/LICENSE)
+[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/wintermi/get-retail-predictions?include_prereleases)](https://github.com/wintermi/get-retail-predictions/releases)
 
 
 ## Description
@@ -45,3 +48,7 @@ ARGS:
   }
 ]
 ```
+
+
+## License
+**get-retail-predictions** is released under the [Apache License 2.0](https://github.com/wintermi/get-retail-predictions/blob/main/LICENSE) unless explicitly mentioned in the file header.
