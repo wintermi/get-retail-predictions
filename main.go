@@ -32,7 +32,7 @@ var indent = "..."
 var helpText = `
 A command line application designed to provide a simple method of requesting
 predictions from a Google Cloud Retail API model for all sets of parameters
-contained within an input file.
+contained within the input file.
 
 Use --help for more details.
 

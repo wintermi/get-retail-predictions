@@ -6,7 +6,7 @@
 
 
 ## Description
-A command line application designed to provide a simple method of requesting predictions from a Google Cloud Retail API model for all sets of parameters contained within an input file.
+A command line application designed to provide a simple method of requesting predictions from a Google Cloud Retail API model for all sets of parameters contained within the input file.
 
 ```
 USAGE:
