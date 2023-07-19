@@ -1,11 +1,13 @@
 # Get Retail API Predictions
-[![Go Workflow Status](https://github.com/wintermi/get-retail-predictions/workflows/Go/badge.svg)](https://github.com/wintermi/get-retail-predictions/actions/workflows/go.yml)
-[![Go Report Card](https://goreportcard.com/badge/github.com/wintermi/get-retail-predictions)](https://goreportcard.com/report/github.com/wintermi/get-retail-predictions)
-[![license](https://img.shields.io/github/license/wintermi/get-retail-predictions.svg)](https://github.com/wintermi/get-retail-predictions/blob/main/LICENSE)
-[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/wintermi/get-retail-predictions?include_prereleases)](https://github.com/wintermi/get-retail-predictions/releases)
+
+[![Workflows](https://github.com/wintermi/get-retail-predictions/workflows/Go/badge.svg)](https://github.com/wintermi/get-retail-predictions/actions/workflows/go.yml)
+[![Go Report](https://goreportcard.com/badge/github.com/wintermi/get-retail-predictions)](https://goreportcard.com/report/github.com/wintermi/get-retail-predictions)
+[![License](https://img.shields.io/github/license/wintermi/get-retail-predictions.svg)](https://github.com/wintermi/get-retail-predictions/blob/main/LICENSE)
+[![Release](https://img.shields.io/github/v/release/wintermi/get-retail-predictions?include_prereleases)](https://github.com/wintermi/get-retail-predictions/releases)
 
 
 ## Description
+
 A command line application designed to provide a simple method of requesting predictions from a Google Cloud Retail API model for all sets of parameters contained within the input file.
 
 ```
@@ -51,4 +53,5 @@ ARGS:
 
 
 ## License
+
 **get-retail-predictions** is released under the [Apache License 2.0](https://github.com/wintermi/get-retail-predictions/blob/main/LICENSE) unless explicitly mentioned in the file header.
