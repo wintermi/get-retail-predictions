@@ -1,6 +1,6 @@
 # Get Retail API Predictions
 
-[![Workflows](https://github.com/wintermi/get-retail-predictions/workflows/Go/badge.svg)](https://github.com/wintermi/get-retail-predictions/actions/workflows/go.yml)
+[![Workflows](https://github.com/wintermi/get-retail-predictions/workflows/Go/badge.svg)](https://github.com/wintermi/get-retail-predictions/actions)
 [![Go Report](https://goreportcard.com/badge/github.com/wintermi/get-retail-predictions)](https://goreportcard.com/report/github.com/wintermi/get-retail-predictions)
 [![License](https://img.shields.io/github/license/wintermi/get-retail-predictions.svg)](https://github.com/wintermi/get-retail-predictions/blob/main/LICENSE)
 [![Release](https://img.shields.io/github/v/release/wintermi/get-retail-predictions?include_prereleases)](https://github.com/wintermi/get-retail-predictions/releases)
